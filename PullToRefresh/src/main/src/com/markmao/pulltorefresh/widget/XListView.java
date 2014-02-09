@@ -1,6 +1,8 @@
 package com.markmao.pulltorefresh.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -8,8 +10,15 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.*;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Scroller;
+import android.widget.TextView;
+
 import com.markmao.pulltorefresh.R;
 
 /**
@@ -270,6 +279,18 @@ public class XListView extends ListView implements OnScrollListener {
             mListViewListener.onLoadMore();
         }
     }
+    
+    //用于第一次进入加载
+ 	public void startRefresh() {
+ 		updateHeaderHeight(80);//写的有点粗糙..
+ 		invokeOnScrolling();
+ 		mPullRefreshing = true;
+ 		mHeaderView.setState(XHeaderView.STATE_REFRESHING);
+ 		if (mListViewListener != null) {
+ 			mListViewListener.onRefresh();
+ 		}
+ 		resetHeaderHeight();
+ 	}
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {

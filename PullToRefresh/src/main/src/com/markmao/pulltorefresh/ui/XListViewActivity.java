@@ -1,18 +1,24 @@
 package com.markmao.pulltorefresh.ui;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
 import com.markmao.pulltorefresh.R;
 import com.markmao.pulltorefresh.widget.XListView;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import com.markmao.pulltorefresh.widget.XListView.IXListViewListener;
 
 /**
  * XListView demo
@@ -47,7 +53,7 @@ public class XListViewActivity extends Activity implements XListView.IXListViewL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_list_view);
 
-        geneItems();
+       // geneItems();
         initView();
     }
 
@@ -62,6 +68,15 @@ public class XListViewActivity extends Activity implements XListView.IXListViewL
 
         mAdapter = new ArrayAdapter<String>(this, R.layout.vw_list_item, items);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+			         Toast.makeText(getApplicationContext(), ""+position, 1).show();
+				
+			}
+		});
     }
 
     @Override
@@ -72,10 +87,10 @@ public class XListViewActivity extends Activity implements XListView.IXListViewL
                 mIndex = ++mRefreshIndex;
                 items.clear();
                 geneItems();
-                // mAdapter.notifyDataSetChanged();
-                mAdapter = new ArrayAdapter<String>(XListViewActivity.this, R.layout.vw_list_item,
-                        items);
-                mListView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+//                mAdapter = new ArrayAdapter<String>(XListViewActivity.this, R.layout.vw_list_item,
+//                        items);
+//                mListView.setAdapter(mAdapter);
                 onLoad();
             }
         }, 2500);
@@ -94,7 +109,7 @@ public class XListViewActivity extends Activity implements XListView.IXListViewL
     }
 
     private void geneItems() {
-        for (int i = 0; i != 20; ++i) {
+        for (int i = 0; i != 2; ++i) {
             items.add("Test XListView item " + (++mIndex));
         }
     }
